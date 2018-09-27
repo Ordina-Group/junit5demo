@@ -1,0 +1,64 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.5.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'be.ordina.junit5'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.apache.commons:commons-lang3:3.8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+    //region Junit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.1'
+    testImplementation 'junit:junit:4.12'
+
+    //Engines can, and usually should be defined as runtime dependencies
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'    //Backwards compatibility!
+    //endregion
+
+    testImplementation 'org.mockito:mockito-core:2.19.1'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.19.1'
+}
+
+test {
+    //region junit 5 setup
+    useJUnitPlatform(){
+        excludeTags 'slowTest', 'be.ordina.junit4.demo.testselection.SlowTest'
+    }
+    systemProperties = [
+            'junit.jupiter.extensions.autodetection.enabled': 'true', //support for global extension declaration
+
+    ]
+
+    //endregion
+
+//    region junit 4
+//    useJUnit() {
+//        excludeCategories 'be.ordina.junit4.demo.categories.SlowTest'
+//    }
+//    endregion
+}
